@@ -1,0 +1,87 @@
+# Dependency updates, batched rather than one at a time.
+#
+# Almost everything here is developer tooling, and a separate pull request per
+# package would be a weekly inbox of eslint patch bumps nobody reads. A digest
+# that is read is worth more than a stream that is skimmed.
+#
+# **`@technosoftware/trail-core` is the exception and has its own group.** It is
+# the one runtime dependency, and in the suite it was not a dependency at all
+# but the package next door; here it arrives from a registry like anything
+# else. It is also the one update that can change what gets written into a
+# vault, because the core owns the note formats. That belongs in a pull request
+# somebody reads on its own rather than buried in a list of fourteen patch
+# bumps.
+#
+# **Security advisories ignore all of this.** Dependabot opens those
+# immediately, on their own, whatever the schedule and grouping say. That is
+# the right asymmetry: a grouped weekly digest for housekeeping, and an
+# interruption for something that matters.
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      # Not Monday. The `check` workflow's own weekly run is Monday morning,
+      # and a digest landing beside it is a digest that gets closed unread.
+      day: wednesday
+      time: '06:00'
+      timezone: Europe/Zurich
+    open-pull-requests-limit: 3
+    # `deps: bump x from a to b`, which is this project's `scope: what
+    # happened` shape. The default is `chore(deps):`, a conventional-commit
+    # prefix the history does not use.
+    commit-message:
+      prefix: deps
+    groups:
+      core:
+        patterns:
+          - '@technosoftware/trail-core'
+      tooling:
+        patterns:
+          - '*'
+        exclude-patterns:
+          - '@technosoftware/trail-core'
+        # Majors stay on their own. A major of eslint, vitest or typescript
+        # changes what the suite means rather than what it costs, and it
+        # deserves to be read by itself.
+        update-types:
+          - minor
+          - patch
+
+    # TypeScript majors are refused here, and the refusal is the point.
+    #
+    # This package is pinned to TypeScript 5 deliberately. `typescript-eslint`
+    # 8 will not run against TypeScript 7 at all, and TRAILsuite only gets
+    # away with the newer compiler because four workspaces each nest their own
+    # while the linter's TypeScript 5 sits at the root. One package has one
+    # `node_modules` and no such arrangement, so the choice here is between
+    # TypeScript 7 and having type-aware lint rules -- see CONTRIBUTING.md.
+    #
+    # Without this, that argument gets re-litigated every Wednesday: closing
+    # the 7.0.2 pull request only tells Dependabot not to offer 7.0.2 again,
+    # and 7.0.3 arrives a week later. Worse, `open-pull-requests-limit` is 3,
+    # so a pull request that can never be merged is a third of the budget
+    # spent permanently on a decision already made.
+    #
+    # Minors and patches of TypeScript 5 still come through the tooling group.
+    # Lifting this is what you do when the linter supports 7, not before.
+    ignore:
+      - dependency-name: typescript
+        update-types:
+          - version-update:semver-major
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: wednesday
+      time: '06:00'
+      timezone: Europe/Zurich
+    commit-message:
+      prefix: ci
+    groups:
+      actions:
+        patterns:
+          - '*'

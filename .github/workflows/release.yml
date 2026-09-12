@@ -1,0 +1,56 @@
+# What a release attaches, built by the thing that will be attaching it.
+#
+# `docs/releasing.md` says to attach `main.js`, `manifest.json` and
+# `styles.css`: those three files are what a vault installs and nothing else in
+# the repository is needed at runtime. Doing that by hand means the files
+# somebody uploads are the files that happened to be in their working copy,
+# which is the one thing nobody can check afterwards. Here they are built from
+# the tag, by `npm ci` and `npm run build`, and the release is drafted from the
+# same run.
+#
+# Tags are plain `v1.0.0`. In the suite they carried a package name because
+# four packages shared one repository; here there is one.
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+
+      # A tag whose version does not match the manifest would publish a build
+      # that reports a different version to every user who installs it, which
+      # is the failure `sync-version.js` exists to prevent at the other end.
+      - name: Refuse a tag the manifest does not agree with
+        run: |
+          tagged="${GITHUB_REF_NAME#v}"
+          manifest=$(node -p "require('./manifest.json').version")
+          if [ "$manifest" != "$tagged" ]; then
+            echo "tag says $tagged, manifest says $manifest"
+            exit 1
+          fi
+
+      - uses: softprops/action-gh-release@v3
+        with:
+          name: CULItrail ${{ github.ref_name }}
+          files: |
+            main.js
+            manifest.json
+            styles.css

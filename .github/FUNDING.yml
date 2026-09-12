@@ -1,0 +1,15 @@
+# The Sponsor button on this repository's page.
+#
+# One key and one name, because there is one place to sponsor this work: the
+# Technosoftware GmbH organization on GitHub. The `github` key takes an
+# organization plus up to four developers; naming individuals as well would
+# split the same donation into a choice nobody asked to make.
+#
+# **There is nothing to buy here, which is the difference from the siblings.**
+# CULItrail is GPL-3.0-or-later, because its meal code descends from Recipe Box
+# -- see NOTICE.md -- so commercial use needs no licence from anybody and there
+# is no sale for a sponsorship to be confused with. Sponsoring is a donation
+# towards the work and nothing else. APERtrail and NODAtrail are PolyForm
+# Noncommercial and do sell a commercial licence; their funding file says so,
+# which is why these two files are not copies of each other.
+github: technosoftware-gmbh

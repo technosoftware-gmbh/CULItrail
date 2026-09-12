@@ -1,0 +1,15 @@
+node_modules/
+dist/
+main.js
+main.js.map
+*.log
+.DS_Store
+
+# The sandbox that edits this repo cannot always unlink files, so a deletion
+# lands here instead of happening. Nothing in it is source.
+_to_delete/
+
+# A vault's own folder, which only ever lands here by accident:
+# `install-into-vault.sh <path>` given a relative path writes
+# `<path>/.obsidian/plugins/...` inside the repository rather than into a vault.
+.obsidian/
