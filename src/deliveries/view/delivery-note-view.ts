@@ -15,7 +15,7 @@ import { t } from '../../lang/I18nManager';
 import { frontmatterOf } from '../../shared/vault-scan';
 import { DELIVERY_NOTE_VIEW_TYPE } from '../../meals/view-types';
 import { renderInvoice } from '@technosoftware/trail-core/obsidian';
-import { parseDelivery } from '@technosoftware/trail-core';
+import { caseFold, parseDelivery } from '@technosoftware/trail-core';
 import { readOrders } from '../../orders/read-orders';
 import { allPersonTitles } from '../../orders/view/edit-order';
 import type { OrderRecord } from '../../orders/types';
@@ -141,11 +141,11 @@ export class DeliveryNoteView extends TextFileView {
    * would hide a broken link rather than show it.
    */
   private settled(delivery: DeliveryRecord, orders: readonly OrderRecord[]): SettledOrder[] {
-    const byTitle = new Map(orders.map((order) => [order.title.trim().toLowerCase(), order]));
+    const byTitle = new Map(orders.map((order) => [caseFold(order.title), order]));
 
     return delivery.orderTitles.map((title) => ({
       title,
-      companyTitle: byTitle.get(title.trim().toLowerCase())?.companyTitle ?? null,
+      companyTitle: byTitle.get(caseFold(title))?.companyTitle ?? null,
     }));
   }
 

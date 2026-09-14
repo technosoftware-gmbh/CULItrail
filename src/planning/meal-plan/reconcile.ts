@@ -16,6 +16,7 @@
  */
 import type { MealPlanEntry } from '../../settings/types';
 import type { EntryScope } from './entries';
+import { caseFold } from '@technosoftware/trail-core';
 
 /** One entry of a note, resolved: a meal path if the wikilink pointed at one, or a label. */
 export interface NoteEntry {
@@ -87,7 +88,7 @@ function identity(entry: {
   day?: string;
   meal?: string;
 }): string {
-  const subject = entry.mealPath || `label:${(entry.label ?? '').trim().toLowerCase()}`;
+  const subject = entry.mealPath || `label:${caseFold(entry.label ?? '')}`;
   return [subject, entry.day ?? '', entry.meal ?? ''].join(SEPARATOR);
 }
 

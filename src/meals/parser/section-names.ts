@@ -16,6 +16,7 @@
  * App-free.
  */
 import type { CULItrailSettings } from '../../settings/types';
+import { caseFold } from '@technosoftware/trail-core';
 
 export function reservedSectionHeadings(settings: CULItrailSettings): string[] {
   return [
@@ -63,6 +64,6 @@ export function renderedSectionHeadings(settings: CULItrailSettings): string[] {
 
 /** True when a heading names one of those sections, compared the way headings are elsewhere. */
 export function isReservedHeading(heading: string, reserved: string[]): boolean {
-  const text = heading.trim().toLowerCase();
-  return reserved.some((name) => name.toLowerCase() === text);
+  const text = caseFold(heading);
+  return reserved.some((name) => caseFold(name) === text);
 }

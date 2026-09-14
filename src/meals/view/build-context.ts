@@ -25,6 +25,7 @@ import { resolveReheating } from '../reheating/resolve';
 import type { ApplianceEntry } from '../reheating/types';
 import { defaultMealImageValue, resolveHeroImageValue } from '../view-model/hero-image';
 import type { MealLayoutContext } from './layouts/types';
+import { caseFold } from '@technosoftware/trail-core';
 
 /**
  * What the caller had to read from another note before this could be built.
@@ -140,8 +141,7 @@ function readEatingHistory(
   if (!settings.eatingHistoryEnabled) return [];
 
   const section = splitTrailingSections(body).find(
-    (candidate) =>
-      candidate.heading.toLowerCase() === settings.eatingHistoryHeading.trim().toLowerCase()
+    (candidate) => candidate.heading.toLowerCase() === caseFold(settings.eatingHistoryHeading)
   );
 
   return mergeEatingHistory(

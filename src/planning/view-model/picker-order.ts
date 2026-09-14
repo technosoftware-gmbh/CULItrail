@@ -1,4 +1,4 @@
-/**
+import { caseFold } from '@technosoftware/trail-core'; /**
  * Which meals the picker offers first.
  *
  * **Sorted to the top, not filtered to.** The freezer holds more than the last
@@ -33,7 +33,7 @@ export function deliveredFirst<T extends { label: string }>(
 ): (T & DeliveredFlag)[] {
   const flagged = choices.map((choice) => ({
     ...choice,
-    delivered: delivered.has(choice.label.trim().toLowerCase()),
+    delivered: delivered.has(caseFold(choice.label)),
   }));
 
   return [...flagged.filter((choice) => choice.delivered), ...flagged.filter((c) => !c.delivered)];

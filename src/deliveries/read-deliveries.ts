@@ -11,7 +11,7 @@
 import type { App } from 'obsidian';
 import type { CULItrailSettings } from '../settings/types';
 import { readNotesOfType } from '../vault/read-notes';
-import { parseDelivery, type DeliveryProperties } from '@technosoftware/trail-core';
+import { caseFold, type DeliveryProperties, parseDelivery } from '@technosoftware/trail-core';
 import type { DeliveryRecord } from './types';
 
 export function deliveryProperties(settings: CULItrailSettings): DeliveryProperties {
@@ -69,5 +69,5 @@ export function newestDelivery(deliveries: readonly DeliveryRecord[]): DeliveryR
 export function lastDeliveredTitles(deliveries: readonly DeliveryRecord[]): Set<string> {
   const newest = newestDelivery(deliveries);
   if (!newest) return new Set();
-  return new Set(newest.items.map((item) => item.mealTitle.trim().toLowerCase()));
+  return new Set(newest.items.map((item) => caseFold(item.mealTitle)));
 }

@@ -14,6 +14,35 @@ note carries is not an error. See
 `npm version` runs `sync-version.js`, which copies `package.json`'s version into
 `manifest.json`, so the two cannot drift.
 
+## [Unreleased]
+
+### Fixed
+
+- **A meal, company or order title carrying an umlaut now matches the notes
+  that name it**, whichever way the two sides happen to be normalized. macOS
+  writes an umlaut two ways and the two spellings compare unequal, so a file
+  name and a title pasted into frontmatter were the pair that disagreed: in the
+  vault this was found in, 40 meal notes had a decomposed file name and every
+  plan entry naming one of them resolved to nothing, with a row that rendered
+  without its picture as the only symptom.
+
+  Every name comparison now goes through `caseFold()` from
+  `@technosoftware/trail-core`: the supplier and company lookups, the gallery
+  index and its search, the meal-title matching in plans, eating history,
+  orders and deliveries, and the vocabulary and heading matching beside them.
+  Fifty-nine places trimmed and lower-cased on their own before this, which is
+  fifty-nine chances to disagree about what two names being the same means.
+
+### Changed
+
+- **`@technosoftware/trail-core` is now `^2.1.0`**, which is the release that
+  added `caseFold()`. Run `npm install` after pulling this.
+- `tests/name-fold.test.ts` refuses a hand-written fold, reading the source
+  with the TypeScript compiler rather than a regex. It is this plugin's copy of
+  a rule TRAILsuite keeps as a root test across its own packages; the fold
+  itself stays in the core, so three plugins cannot grow three opinions about
+  what two names being the same means.
+
 ## [1.0.0] - 2026-09-12
 
 ### Changed

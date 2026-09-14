@@ -23,7 +23,7 @@
  *
  * App-free.
  */
-import { wikilinkTarget, wikilinkValue } from '@technosoftware/trail-core';
+import { caseFold, wikilinkTarget, wikilinkValue } from '@technosoftware/trail-core';
 import { parseMealSlotKey, parseWeekdayKey, type MealSlotKey } from '../../lang/vocabulary';
 import type { WeekdayKey } from '../../lang/vocabulary';
 import type { CULItrailSettings } from '../../settings/types';
@@ -166,7 +166,7 @@ function readRating(value: unknown): number | null {
  */
 function readFlag(value: unknown): boolean {
   if (typeof value === 'boolean') return value;
-  return typeof value === 'string' && value.trim().toLowerCase() === 'true';
+  return typeof value === 'string' && caseFold(value) === 'true';
 }
 
 function readText(value: unknown): string | null {
@@ -317,7 +317,10 @@ function identityOf(entry: {
   day: WeekdayKey | null;
   slot: MealSlotKey | null;
 }): string {
-  const subject = entry.mealTitle?.trim().toLowerCase() ?? `label:${entry.label?.trim() ?? ''}`;
+  // `=== null` rather than a truthiness test, so an entry whose meal title is
+  // an empty string keeps identifying itself the way it did before the fold.
+  const subject =
+    entry.mealTitle === null ? `label:${entry.label?.trim() ?? ''}` : caseFold(entry.mealTitle);
   return [subject, entry.day ?? '', entry.slot ?? ''].join(SEPARATOR);
 }
 

@@ -15,11 +15,12 @@
  */
 import type { CULItrailSettings, CustomBadge } from '../../settings/types';
 import { mealMetaAliases } from '../parser/meal-meta';
+import { caseFold } from '@technosoftware/trail-core';
 
 export type TimeBadgeKind = 'cook';
 
 function namesAny(property: string, aliases: string[]): boolean {
-  const wanted = property.trim().toLowerCase();
+  const wanted = caseFold(property);
   if (!wanted) return false;
   return aliases.some((alias) => alias.toLowerCase() === wanted);
 }

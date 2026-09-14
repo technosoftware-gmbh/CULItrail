@@ -10,6 +10,7 @@
 import { MEAL_SLOT_KEYS, WEEKDAY_KEYS, type WeekdayKey } from '../../lang/vocabulary';
 import type { MealPlanEntry } from '../../settings/types';
 import { entriesInScope, type EntryScope } from '../meal-plan/entries';
+import { caseFold } from '@technosoftware/trail-core';
 
 /**
  * Which weekday key a date falls on.
@@ -31,7 +32,7 @@ export function weekdayKeyOf(date: Date = new Date()): WeekdayKey {
  * of itself is worse than one that is loosely ordered.
  */
 export function mealRank(meal: string | undefined): number {
-  const index = (MEAL_SLOT_KEYS as readonly string[]).indexOf((meal ?? '').trim().toLowerCase());
+  const index = (MEAL_SLOT_KEYS as readonly string[]).indexOf(caseFold(meal ?? ''));
   return index === -1 ? MEAL_SLOT_KEYS.length : index;
 }
 

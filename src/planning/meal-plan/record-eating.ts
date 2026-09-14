@@ -22,7 +22,7 @@
  * which is the order every other writer here uses.
  */
 import { App } from 'obsidian';
-import { formatWeekTitle, parseDayTitle } from '@technosoftware/trail-core';
+import { caseFold, formatWeekTitle, parseDayTitle } from '@technosoftware/trail-core';
 import { WEEKDAY_KEYS, type WeekdayKey } from '../../lang/vocabulary';
 import type { CULItrailSettings } from '../../settings/types';
 import { mealPlanNotePath } from './note-path';
@@ -85,11 +85,10 @@ function plannedEntry(
   mealTitle: string,
   day: WeekdayKey
 ): PlanEntryContent | null {
-  const wanted = mealTitle.trim().toLowerCase();
+  const wanted = caseFold(mealTitle);
   return (
     entries.find(
-      (entry) =>
-        !entry.eaten && entry.day === day && (entry.mealTitle ?? '').trim().toLowerCase() === wanted
+      (entry) => !entry.eaten && entry.day === day && caseFold(entry.mealTitle ?? '') === wanted
     ) ?? null
   );
 }

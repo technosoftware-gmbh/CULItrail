@@ -16,7 +16,7 @@ import { addFooterButtons, BaseModal } from '../../../ui/base-modal';
 import type { CULItrailSettings } from '../../../settings/types';
 import { readMealDraft } from '../read-draft';
 import type { CompanyTerms } from '../../../crm/company-terms';
-import { companyHasRole } from '@technosoftware/trail-core';
+import { caseFold, companyHasRole } from '@technosoftware/trail-core';
 import { readCompanies } from '../../../crm/read-crm';
 import { SupplierLinesModal } from '../../../crm/supplier-lines-modal';
 import { currencyFor } from '../../view-model/currency';
@@ -144,11 +144,10 @@ export class EditMealModal extends BaseModal {
   /** What the named company charges, or null when it names none this vault has. */
   private supplierTerms(supplier: string | null): CompanyTerms | null {
     if (!supplier) return null;
-    const key = supplier.trim().toLowerCase();
+    const key = caseFold(supplier);
     return (
-      readCompanies(this.app, this.settings).find(
-        (company) => company.title.trim().toLowerCase() === key
-      )?.terms ?? null
+      readCompanies(this.app, this.settings).find((company) => caseFold(company.title) === key)
+        ?.terms ?? null
     );
   }
 
@@ -173,7 +172,7 @@ export class EditMealModal extends BaseModal {
 
     const key = named.toLowerCase();
     const company = readCompanies(this.app, this.settings).find(
-      (candidate) => candidate.title.trim().toLowerCase() === key
+      (candidate) => caseFold(candidate.title) === key
     );
     if (!company) return;
 

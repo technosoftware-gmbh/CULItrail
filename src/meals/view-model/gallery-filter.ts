@@ -11,6 +11,7 @@
 import type { CULItrailSettings, GallerySavedState } from '../../settings/types';
 import { matchingAllergens } from './allergens';
 import { neverEaten, type GalleryEntry } from './gallery-entry';
+import { caseFold } from '@technosoftware/trail-core';
 
 /** The filter fields, minus search. Used to clear them and to tell whether any is set. */
 export const CLEARED_FILTERS: Pick<
@@ -51,15 +52,15 @@ function inFolder(entry: GalleryEntry, folder: string): boolean {
 
 /** True when the meal declares this diet. Case-insensitive, since a note is typed by hand. */
 function hasDiet(entry: GalleryEntry, wanted: string): boolean {
-  const target = wanted.trim().toLowerCase();
-  return entry.meta.diet.some((diet) => diet.trim().toLowerCase() === target);
+  const target = caseFold(wanted);
+  return entry.meta.diet.some((diet) => caseFold(diet) === target);
 }
 
 /** True when a tag matches, counting a parent tag as matching its nested children. */
 function hasTag(entry: GalleryEntry, wanted: string): boolean {
-  const target = wanted.trim().toLowerCase();
+  const target = caseFold(wanted);
   return entry.tags.some((tag) => {
-    const candidate = tag.trim().toLowerCase();
+    const candidate = caseFold(tag);
     return candidate === target || candidate.startsWith(`${target}/`);
   });
 }
@@ -69,8 +70,8 @@ export function matchesGalleryFilters(
   state: GallerySavedState,
   settings: CULItrailSettings
 ): boolean {
-  const search = state.search.trim().toLowerCase();
-  if (search && !entry.title.toLowerCase().includes(search)) return false;
+  const search = caseFold(state.search);
+  if (search && !caseFold(entry.title).includes(search)) return false;
 
   if (state.folder && !inFolder(entry, state.folder)) return false;
   if (state.tag && !hasTag(entry, state.tag)) return false;
