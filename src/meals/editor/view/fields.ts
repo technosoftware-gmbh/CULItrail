@@ -8,6 +8,7 @@
 import { App, FuzzySuggestModal, Notice, setIcon, TFile } from 'obsidian';
 import { t } from '../../../lang/I18nManager';
 import { renderImageCard, usableImageValue } from '../../../ui/images';
+import { caseFold } from '@technosoftware/trail-core';
 
 /** A number as typed, tolerating a comma decimal separator and an empty field. */
 export function parseNumberField(value: string): number | null {
@@ -188,7 +189,7 @@ export function chipsField(
   // Case-insensitively, because a note saying `gluten` and a setting saying
   // `Gluten` are one allergen and the chip has to show as pressed for both.
   const isChosen = (value: string): boolean =>
-    chosen.some((entry) => entry.trim().toLowerCase() === value.trim().toLowerCase());
+    chosen.some((entry) => caseFold(entry) === caseFold(value));
 
   for (const choice of choices) {
     const chip = row.createEl('button', { cls: 'culi-edit-chip', text: choice });
@@ -203,7 +204,7 @@ export function chipsField(
     chip.addEventListener('click', (event) => {
       event.preventDefault();
       const next = on
-        ? chosen.filter((entry) => entry.trim().toLowerCase() !== choice.trim().toLowerCase())
+        ? chosen.filter((entry) => caseFold(entry) !== caseFold(choice))
         : [...chosen, choice];
       onChange(next);
     });

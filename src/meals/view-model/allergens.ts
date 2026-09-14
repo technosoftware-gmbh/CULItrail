@@ -1,4 +1,4 @@
-/**
+import { caseFold } from '@technosoftware/trail-core'; /**
  * Matching a meal's allergens against the reader's own list.
  *
  * Substring matching in both directions, because the two lists are written by
@@ -11,11 +11,11 @@
 
 /** Every allergen of a meal that appears in the reader's list. */
 export function matchingAllergens(mealAllergens: string[], mine: string[]): string[] {
-  const wanted = mine.map((entry) => entry.trim().toLowerCase()).filter((entry) => entry !== '');
+  const wanted = mine.map((entry) => caseFold(entry)).filter((entry) => entry !== '');
   if (wanted.length === 0) return [];
 
   return mealAllergens.filter((allergen) => {
-    const candidate = allergen.trim().toLowerCase();
+    const candidate = caseFold(allergen);
     if (!candidate) return false;
     return wanted.some((entry) => candidate.includes(entry) || entry.includes(candidate));
   });

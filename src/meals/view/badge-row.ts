@@ -16,6 +16,7 @@ import { setIcon } from 'obsidian';
 import type { BadgeColor, CULItrailSettings, CustomBadge } from '../../settings/types';
 import { renderStatStrip } from '../../ui/stat-strip';
 import { badgeCells, planBadges, type SplitBadgeRow } from '../view-model/badge-display';
+import { caseFold } from '@technosoftware/trail-core';
 
 /**
  * The colour one value wears.
@@ -27,9 +28,9 @@ function colorFor(badge: CustomBadge, value: string): BadgeColor {
   const map = badge.valueColors;
   if (!map || !value) return badge.color;
 
-  const wanted = value.trim().toLowerCase();
+  const wanted = caseFold(value);
   for (const [key, color] of Object.entries(map)) {
-    if (key.trim().toLowerCase() === wanted) return color;
+    if (caseFold(key) === wanted) return color;
   }
   return badge.color;
 }

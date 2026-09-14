@@ -20,7 +20,7 @@ import type { CULItrailSettings } from '../../settings/types';
 import { addFooterButtons, BaseModal } from '../../ui/base-modal';
 import { readNotesOfType } from '../../vault/read-notes';
 import type { DeliveryContent } from '@technosoftware/trail-core';
-import { outstandingItems } from '@technosoftware/trail-core';
+import { caseFold, outstandingItems } from '@technosoftware/trail-core';
 import type { DeliveryItem, DeliveryRecord } from '../types';
 
 /** How many recent orders the dialog offers to link. */
@@ -166,7 +166,7 @@ export class DeliveryModal extends BaseModal {
 
     for (const item of outstandingItems([order], others)) {
       const existing = this.draft.items.find(
-        (row) => row.mealTitle.trim().toLowerCase() === item.mealTitle.trim().toLowerCase()
+        (row) => caseFold(row.mealTitle) === caseFold(item.mealTitle)
       );
       if (existing) existing.quantity += item.quantity;
       else this.draft.items.push({ ...item });

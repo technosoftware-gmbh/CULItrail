@@ -11,7 +11,7 @@
  * rather than in the view because it is a rule about what an order means, not
  * about how one is drawn.
  */
-import { selectionTitles } from '@technosoftware/trail-core';
+import { caseFold, selectionTitles } from '@technosoftware/trail-core';
 import type { OrdersSavedState } from '../../settings/types';
 import type { OrderRecord } from '../types';
 
@@ -86,7 +86,7 @@ export function filterOrders(
   state: OrdersSavedState,
   delivered: Set<string>
 ): OrderRecord[] {
-  const query = state.search.trim().toLowerCase();
+  const query = caseFold(state.search);
 
   return orders.filter((order) => {
     if (state.company !== null && order.companyTitle !== state.company) return false;

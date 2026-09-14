@@ -22,7 +22,7 @@
  */
 import type { App } from 'obsidian';
 import type { CULItrailSettings } from '../../settings/types';
-import { readTags } from '@technosoftware/trail-core';
+import { caseFold, readTags } from '@technosoftware/trail-core';
 import { readNoteOrEmpty } from '../../shared/vault-io';
 import { readNotesOfType } from '../../vault/read-notes';
 import { stripFrontmatter } from '../parser/body-sections';
@@ -60,7 +60,7 @@ export async function buildGalleryEntries(
 
   for (const note of notes) {
     const body = stripFrontmatter(await readNoteOrEmpty(app, note.file.path));
-    const supplier = suppliers.get(note.title.trim().toLowerCase()) ?? null;
+    const supplier = suppliers.get(caseFold(note.title)) ?? null;
 
     // The log off the plans, replacing the empty one frontmatter now gives.
     // `eatenCount` and `lastEaten` are left as they are: they are explicit

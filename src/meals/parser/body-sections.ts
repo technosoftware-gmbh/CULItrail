@@ -15,7 +15,7 @@
  *
  * App-free.
  */
-import { splitFrontmatterBlock } from '@technosoftware/trail-core';
+import { caseFold, splitFrontmatterBlock } from '@technosoftware/trail-core';
 
 /** A heading of any level, tolerating the closing hashes some editors add. */
 const HEADING_PATTERN = /^(#{1,6})\s+(.+?)(?:\s+#+)?$/;
@@ -40,12 +40,12 @@ const NOT_FOUND: HeadingLocation = { index: -1, level: 0 };
  * half the notes in a vault silently failing to parse.
  */
 export function findHeading(lines: string[], headingName: string): HeadingLocation {
-  const target = headingName.trim().toLowerCase();
+  const target = caseFold(headingName);
   if (!target) return NOT_FOUND;
 
   for (let i = 0; i < lines.length; i++) {
     const match = HEADING_PATTERN.exec(lines[i]);
-    if (match && match[2].trim().toLowerCase() === target) {
+    if (match && caseFold(match[2]) === target) {
       return { index: i, level: match[1].length };
     }
   }

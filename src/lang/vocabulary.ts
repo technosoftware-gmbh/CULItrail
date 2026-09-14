@@ -21,7 +21,7 @@
  * stable and English and the label is translated, but the vocabulary is open,
  * because a label can declare something no table here anticipated.
  */
-import { isKnownNutrientId } from '@technosoftware/trail-core';
+import { caseFold, isKnownNutrientId } from '@technosoftware/trail-core';
 import { t } from './I18nManager';
 
 /**
@@ -67,12 +67,12 @@ function isMealSlotKey(value: string): value is MealSlotKey {
  * which the writer would ever produce again.
  */
 export function parseWeekdayKey(value: string | undefined): WeekdayKey | null {
-  const normalized = (value ?? '').trim().toLowerCase();
+  const normalized = caseFold(value ?? '');
   return isWeekdayKey(normalized) ? normalized : null;
 }
 
 export function parseMealSlotKey(value: string | undefined): MealSlotKey | null {
-  const normalized = (value ?? '').trim().toLowerCase();
+  const normalized = caseFold(value ?? '');
   return isMealSlotKey(normalized) ? normalized : null;
 }
 

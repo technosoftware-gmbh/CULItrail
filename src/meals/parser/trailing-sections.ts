@@ -1,4 +1,4 @@
-/**
+import { caseFold } from '@technosoftware/trail-core'; /**
  * The sections a meal note carries after its instructions.
  *
  * Notes, Source, Variations, whatever a vault happens to write. CULItrail does
@@ -50,12 +50,10 @@ export function splitTrailingSections(
   endExclusionAt: string[] = []
 ): TrailingSection[] {
   const excluded = new Set(
-    exclude.map((heading) => heading.trim().toLowerCase()).filter((heading) => heading !== '')
+    exclude.map((heading) => caseFold(heading)).filter((heading) => heading !== '')
   );
   const stops = new Set(
-    endExclusionAt
-      .map((heading) => heading.trim().toLowerCase())
-      .filter((heading) => heading !== '')
+    endExclusionAt.map((heading) => caseFold(heading)).filter((heading) => heading !== '')
   );
 
   const sections: TrailingSection[] = [];

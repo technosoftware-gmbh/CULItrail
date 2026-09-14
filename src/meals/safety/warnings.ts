@@ -9,6 +9,7 @@
  * App-free.
  */
 import type { CULItrailSettings } from '../../settings/types';
+import { caseFold } from '@technosoftware/trail-core';
 
 export interface AllergenWarning {
   kind: 'allergen';
@@ -28,7 +29,7 @@ export function allergenWarning(declared: string[], myAllergens: string[]): Alle
   const haystack = declared.map((entry) => entry.toLowerCase());
 
   const matched = myAllergens
-    .map((allergen) => allergen.trim().toLowerCase())
+    .map((allergen) => caseFold(allergen))
     .filter((allergen) => allergen !== '')
     .filter((allergen) => haystack.some((entry) => entry.includes(allergen)));
 

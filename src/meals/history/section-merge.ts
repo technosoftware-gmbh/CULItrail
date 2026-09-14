@@ -19,6 +19,7 @@
  */
 import { renderEatingLine } from './render-line';
 import type { EatingRecord } from './types';
+import { caseFold } from '@technosoftware/trail-core';
 
 const HEADING = /^(#{1,6})\s+(.+?)(?:\s+#+)?$/;
 const ID_MARKER = /<!--\s*(?:culi|cul|rb)-id:([^>]*?)\s*-->/i;
@@ -43,12 +44,12 @@ export interface SectionBounds {
 }
 
 export function findSection(lines: string[], headingName: string): SectionBounds {
-  const target = headingName.trim().toLowerCase();
+  const target = caseFold(headingName);
   if (!target) return { headingIndex: -1, endIndex: lines.length, level: 0 };
 
   for (let i = 0; i < lines.length; i++) {
     const match = HEADING.exec(lines[i]);
-    if (!match || match[2].trim().toLowerCase() !== target) continue;
+    if (!match || caseFold(match[2]) !== target) continue;
 
     const level = match[1].length;
     let end = i + 1;

@@ -9,7 +9,7 @@ import type { CULItrailSettings } from '../settings/types';
 import { readNotesOfType } from '../vault/read-notes';
 import { parseOrder, type OrderProperties } from '@technosoftware/trail-core';
 import type { OrderRecord } from './types';
-import { selectionTitles } from '@technosoftware/trail-core';
+import { caseFold, selectionTitles } from '@technosoftware/trail-core';
 
 /** The property names an order note is written and read with, gathered from settings. */
 export function orderProperties(settings: CULItrailSettings): OrderProperties {
@@ -73,11 +73,11 @@ export function readOrders(
 
 /** Every order naming one meal, for the meal view's "ordered before" block. */
 export function ordersForMeal(orders: OrderRecord[], mealTitle: string): OrderRecord[] {
-  const wanted = mealTitle.trim().toLowerCase();
+  const wanted = caseFold(mealTitle);
 
   return orders.filter((order) =>
     order.selections.some((selection) =>
-      selectionTitles(selection).some((title) => title.trim().toLowerCase() === wanted)
+      selectionTitles(selection).some((title) => caseFold(title) === wanted)
     )
   );
 }

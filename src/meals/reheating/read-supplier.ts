@@ -21,7 +21,7 @@ import { readNoteOrEmpty } from '../../shared/vault-io';
 import { stripFrontmatter } from '../parser/body-sections';
 import { parseReheatSection } from './parse-section';
 import type { ApplianceEntry } from './types';
-import { selectionTitles } from '@technosoftware/trail-core';
+import { caseFold, selectionTitles } from '@technosoftware/trail-core';
 
 /** How a supplier was arrived at, so a reader can be told which and why. */
 export type SupplierSource = 'property' | 'order' | 'none';
@@ -70,9 +70,7 @@ export function resolveSupplier(
 ): SupplierResolution {
   const companies = readCrmBoard(app, settings).companies;
   const found = (title: string): { file: TFile | null; terms: CompanyTerms } => {
-    const company = companies.find(
-      (candidate) => candidate.title.trim().toLowerCase() === title.trim().toLowerCase()
-    );
+    const company = companies.find((candidate) => caseFold(candidate.title) === caseFold(title));
     return { file: company?.file ?? null, terms: company?.terms ?? emptyCompanyTerms() };
   };
 
@@ -152,7 +150,7 @@ export async function readSuppliersForMeals(
   settings: CULItrailSettings,
   meals: MealRef[]
 ): Promise<Map<string, MealSupplier>> {
-  const key = (title: string): string => title.trim().toLowerCase();
+  const key = (title: string): string => caseFold(title);
 
   const companies = readCrmBoard(app, settings).companies;
   const byCompanyKey = new Map(companies.map((company) => [key(company.title), company]));

@@ -10,11 +10,11 @@
  * App-free, so the matching is testable without a vault.
  */
 import type { OrderRecord, OrderSelection } from './types';
-import { selectionTitles } from '@technosoftware/trail-core';
+import { caseFold, selectionTitles } from '@technosoftware/trail-core';
 
 /** Titles compare case-insensitively and trimmed, the way every other title match here does. */
 function sameTitle(a: string, b: string): boolean {
-  return a.trim().toLowerCase() === b.trim().toLowerCase();
+  return caseFold(a) === caseFold(b);
 }
 
 export interface PersonOrder {
@@ -86,7 +86,7 @@ export function orderTotal(orders: OrderRecord[]): { amount: number; currency: s
   if (priced.length === 0) return null;
 
   const currencies = new Set(
-    priced.map((order) => (order.priceCurrency ?? '').trim().toLowerCase()).filter((c) => c !== '')
+    priced.map((order) => caseFold(order.priceCurrency ?? '')).filter((c) => c !== '')
   );
   if (currencies.size > 1) return null;
 

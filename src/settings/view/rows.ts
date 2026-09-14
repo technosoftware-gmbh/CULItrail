@@ -10,6 +10,7 @@
  * like it worked and be gone on reload.
  */
 import { Setting, setIcon } from 'obsidian';
+import { caseFold } from '@technosoftware/trail-core';
 
 export interface RowContext {
   save: () => Promise<void>;
@@ -313,7 +314,7 @@ export function filterRow(container: HTMLElement, options: RowOptions, scope: HT
 }
 
 function applyFilter(scope: HTMLElement, query: string): void {
-  const needle = query.trim().toLowerCase();
+  const needle = caseFold(query);
 
   for (const group of Array.from(scope.querySelectorAll<HTMLElement>('.culi-settings-group'))) {
     let shown = 0;
@@ -322,9 +323,7 @@ function applyFilter(scope: HTMLElement, query: string): void {
       const name = row.querySelector('.setting-item-name')?.textContent ?? '';
       const value = row.querySelector('input')?.value ?? '';
       const hit =
-        needle === '' ||
-        name.toLowerCase().includes(needle) ||
-        value.toLowerCase().includes(needle);
+        needle === '' || caseFold(name).includes(needle) || value.toLowerCase().includes(needle);
       row.toggleClass('culi-is-hidden', !hit);
       if (hit) shown += 1;
     }

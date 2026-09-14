@@ -1,4 +1,4 @@
-/**
+import { caseFold } from '@technosoftware/trail-core'; /**
  * The values a meal field offers, from three places that may all be incomplete.
  *
  * The rule is `supplier-options.ts`'s, applied to the fields that have a
@@ -18,7 +18,7 @@
 
 /** Case-insensitive, because a vault's `Vegan` and `vegan` are one diet and nobody would configure both. */
 function key(value: string): string {
-  return value.trim().toLowerCase();
+  return caseFold(value);
 }
 
 /**

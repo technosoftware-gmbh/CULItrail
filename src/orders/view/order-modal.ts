@@ -19,6 +19,7 @@ import { readNotesOfType } from '../../vault/read-notes';
 import type { OrderItem, OrderSelection, ParsedOrder } from '../types';
 import {
   applyDishPrice,
+  caseFold,
   computedOrderTotal,
   dishLines,
   orderSubtotal,
@@ -92,7 +93,7 @@ export class OrderModal extends BaseModal {
     const companyNotes = readCompanies(app, settings);
     this.companies = companyNotes.map((company) => company.title);
     this.companyTerms = new Map(
-      companyNotes.map((company) => [company.title.trim().toLowerCase(), company.terms])
+      companyNotes.map((company) => [caseFold(company.title), company.terms])
     );
     const mealNotes = readNotesOfType(app, settings, 'meal');
     this.meals = mealNotes.map((note) => note.title);
@@ -278,9 +279,9 @@ export class OrderModal extends BaseModal {
     }
 
     const paint = (query: string): void => {
-      const wanted = query.trim().toLowerCase();
+      const wanted = caseFold(query);
       const shown = wanted
-        ? this.meals.filter((title) => title.toLowerCase().includes(wanted))
+        ? this.meals.filter((title) => caseFold(title).includes(wanted))
         : this.meals;
 
       for (const { person, container } of lists) {
@@ -411,7 +412,7 @@ export class OrderModal extends BaseModal {
    * recomputes it. See `company-defaults.ts`.
    */
   private applyCompanyDefaults(): void {
-    const key = this.draft.companyTitle?.trim().toLowerCase();
+    const key = this.draft.companyTitle ? caseFold(this.draft.companyTitle) : '';
     const terms = key ? this.companyTerms.get(key) : undefined;
     if (!terms) return;
 
