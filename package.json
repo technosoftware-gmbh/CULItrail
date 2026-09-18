@@ -48,6 +48,6 @@
     "vitest": "^5.0.0"
   },
   "dependencies": {
-    "@technosoftware/trail-core": "^2.1.0"
+    "@technosoftware/trail-core": "^2.2.0"
   }
 }
